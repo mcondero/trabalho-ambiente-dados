@@ -1,0 +1,2 @@
+-- create
+CREATE DATABASE social;

@@ -3,13 +3,29 @@ version: '3.8'
 services:
   mysql:
     image: mysql:8.0.35-debian
-    container_name: mysql-server-biblioteca
+    container_name: mysql-server
     environment:
-      MYSQL_ROOT_PASSWORD: nevermore
-      MYSQL_DATABASE: biblioteca
-      MYSQL_USER: bibliotecario
-      MYSQL_PASSWORD: edgarallanpoe
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: mysql
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: password
     ports:
       - "3306:3306"
+      - "33060:33060"
     volumes:
       - ./mysql-data:/var/lib/mysql
+      - ./init-scripts/data.sql:/docker-entrypoint-initdb.d/data.sql
+      - ./init-scripts/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+  phpmyadmin:
+    container_name: phpmyadmin-server
+    depends_on:
+      - mysql
+    image: phpmyadmin
+    restart: always
+    ports:
+      - "8090:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: "3306"
+      MYSQL_ROOT_PASSWORD: password
